@@ -24,7 +24,7 @@ public class CalcTest {
 			System.out.println(calculator.multiplication(a, b));
 			break;
 
-		default:
+		default: 
 			break;
 		}
 		
