@@ -31,6 +31,7 @@ class MyStack {
 		case "push":
 			push(Integer.parseInt(strString[1]));
 			break;
+			
 		case "top":
 			System.out.println(top());
 			break;
