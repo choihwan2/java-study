@@ -8,6 +8,7 @@ public class LevelTest03_1 {
 		// TODO Auto-generated method stub
 		System.out.println(solution("3people      unFollowed me"));
 
+		System.out.println(Character.toUpperCase('!'));
 	}
 
 	public static String solution(String s) {
@@ -57,11 +58,11 @@ public class LevelTest03_1 {
 			} else {
 				sb.append(Character.toLowerCase(c));
 			}
-
 			if (c == ' ') {
 				isNextUpper = true;
 			}
 		}
+		
 		return sb.toString();
 	}
 
