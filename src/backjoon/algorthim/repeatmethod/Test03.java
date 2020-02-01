@@ -23,25 +23,24 @@ public class Test03 {
 			stringBuffer.append("\n");
 		}
 		System.out.println(stringBuffer.toString());
+		scanner.close();
 	}
 
 	public static void star(int x, int y, int size) {
 
-		if(size == 1) {
+		if (size == 1) {
 			stars[x][y] = '*';
 			return;
 		}
+		int temp = size / 3;
 		
-		star(x, y, size / 3);
-		star(x, y + size / 3, size / 3);
-		star(x, y + size / 3 * 2, size / 3);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				if(i == 1 && j == 1)continue;
+				star(x + i * temp, y + j * temp , temp);
+			}
+		}
 
-		star(x + size / 3, y, size / 3);
-		star(x + size / 3, y + size / 3 * 2, size / 3);
-
-		star(x + size / 3 * 2, y, size / 3);
-		star(x + size / 3 * 2, y + size / 3, size / 3);
-		star(x + size / 3 * 2, y + size / 3 * 2, size / 3);
 	}
 
 }
