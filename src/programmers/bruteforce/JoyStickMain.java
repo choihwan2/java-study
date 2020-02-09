@@ -7,6 +7,11 @@ public class JoyStickMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 	}
+	
+	//1. 문자 배열중 선택하여 값을 비교한다.
+	//2. 다르면 위로 올리는 것이나 아래로 내리는 것중 맞춰준다음 가장 적은 횟수가 드는 것으로 선택
+	//3. 문자열이 같은지 확인한다.
+	//4. 왼쪽으로 갈때와 오른쪽으로 갈때 가장 빠르게 다른값을 가질때를 찾는다. 
 
 	public static int solution(String name) {
 		int answer = 0;
