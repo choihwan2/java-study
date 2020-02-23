@@ -1,4 +1,4 @@
-package programmers.string;
+package programmers.practice;
 
 public class Year2016 {
 
