@@ -5,7 +5,8 @@ import java.util.Scanner;
 public class Problem10809 {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		int[] a = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+		int[] a 		
+		= { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 				-1 };
 
 		String str = scanner.nextLine();
