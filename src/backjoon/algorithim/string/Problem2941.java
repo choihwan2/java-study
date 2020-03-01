@@ -9,6 +9,7 @@ public class Problem2941 {
 		String[] croa = { "c=", "c-", "dz=", "d-", "lj", "nj", "s=", "z=" };
 		String input = scanner.nextLine();
 		for (String temp : croa) {
+			StringBuilder str = new StringBuilder();
 			input = input.replace(temp, "0");
 		}
 		System.out.println(input.length());
