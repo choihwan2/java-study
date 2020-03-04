@@ -17,26 +17,27 @@ public class Problem9012 {
 		int num = scanner.nextInt();
 		scanner.nextLine();
 		String[] arr_str = new String[num];		
-		Stack<Character>[] arr_stack = new Stack[num];
+		Stack<Character> arr_stack = new Stack<Character>();
 		for (int i = 0; i < num; i++) {
 			arr_str[i] = scanner.nextLine();
 		}
 
 		for (int i = 0; i < num; i++) {
-			arr_stack[i] = new Stack<>();
+			boolean isRight = true;
 			for (int j = 0; j < arr_str[i].length(); j++) {
 				if (arr_str[i].charAt(j) == '(') {
-					arr_stack[i].push(arr_str[i].charAt(j));
+					arr_stack.push(arr_str[i].charAt(j));
 				} else if (arr_str[i].charAt(j) == ')') {
-					if (!arr_stack[i].isEmpty()) {
-						arr_stack[i].pop();
+					if (!arr_stack.isEmpty()) {
+						arr_stack.pop();
 					} else {
-						arr_stack[i].push(')');
+						isRight = false;
 						break;
 					}
 				}
 			}
-			if (arr_stack[i].isEmpty()) {
+			if(!arr_stack.isEmpty())isRight =false;
+			if (isRight) {
 				System.out.println("YES");
 			} else {
 				System.out.println("NO");
