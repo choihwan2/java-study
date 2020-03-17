@@ -1,8 +1,13 @@
 package backjoon.algorithim.que;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
+
 
 public class Problem11866 {
 	/*
@@ -15,30 +20,44 @@ public class Problem11866 {
 	 * 예를 들어 (7, 3)-요세푸스 순열은 <3, 6, 2, 7, 5, 1, 4>이다.
 	 * N과 K가 주어지면 (N, K)-요세푸스 순열을 구하는 프로그램을 작성하시오.
 	 */
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		int N = scanner.nextInt();
-		int K = scanner.nextInt();
-		int temp = 0;
-		Queue<Integer> queue = new LinkedList<Integer>();
-		Queue<Integer> answer_q = new LinkedList<Integer>();
+	public static void main(String[] args) throws IOException {
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer strToken = new StringTokenizer(bf.readLine());
+		int N = Integer.parseInt(strToken.nextToken());
+		int K = Integer.parseInt(strToken.nextToken());
+		int cnt = 0;
+		
+		Queue<Integer> que = new LinkedList<Integer>();
+		Queue<Integer> wait_que = new LinkedList<Integer>();
+		ArrayList<Integer> answer = new ArrayList<Integer>();
 		for (int i = 1; i <= N; i++) {
-			queue.add(i);
+			que.add(i);
 		}
 		
-		while (!queue.isEmpty()) {
-			if(temp < K) {
-				temp++;
-				queue.add(queue.poll());
-				continue;
-			}else if(temp == K) {
-				temp = 0;
-				answer_q.add(queue.poll());
+		while (!que.isEmpty()) {
+			cnt++;
+			if(cnt != K) {
+				wait_que.add(que.poll());
+			}else {
+				answer.add(que.poll());
+				cnt -= K;
+			}
+			if (!wait_que.isEmpty()) {
+				que.add(wait_que.poll());
 			}
 		}
 		StringBuilder str = new StringBuilder();
 		str.append("<");
-		
+		for (int i = 0; i < answer.size(); i++) {
+			if(i != answer.size() -1) {	
+				str.append(answer.get(i));
+				str.append(", ");
+			}else {
+				str.append(answer.get(i));
+			}
+		}
+		str.append(">");
+		System.out.println(str.toString());
 	}
 
 }
