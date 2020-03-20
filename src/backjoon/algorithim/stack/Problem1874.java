@@ -21,7 +21,7 @@ public class Problem1874 {
 		// TODO Auto-generated method stub
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 		int num = Integer.parseInt(bf.readLine());
-		int ptr =1;
+		int ptr = 1;
 		boolean flag = true;
 		Stack<Integer> work_stk = new Stack<Integer>();
 		StringBuilder str = new StringBuilder();
@@ -30,30 +30,29 @@ public class Problem1874 {
 			input_arr[i] = Integer.parseInt(bf.readLine());
 		}
 
-
-
 		for (int i = 0; i < num; i++) {
-			while(ptr < input_arr[i]) {
+			while (ptr < input_arr[i]) {
 				work_stk.push(ptr++);
 				str.append("+\n");
 			}
-			if(ptr == input_arr[i]) {
+			if (ptr == input_arr[i]) {
 				work_stk.push(ptr++);
 				str.append("+\n");
 				work_stk.pop();
 				str.append("-\n");
-			}else {
-				if(work_stk.peek() == input_arr[i]) {
+			} else {
+				if (work_stk.peek() == input_arr[i]) {
 					work_stk.pop();
 					str.append("-\n");
-				}else {
+				} else {
 					flag = false;
+					break;
 				}
 			}
 		}
 		if (flag) {
 			System.out.println(str.toString());
-		}else {
+		} else {
 			System.out.println("NO");
 		}
 
