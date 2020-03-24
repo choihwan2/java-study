@@ -54,11 +54,7 @@ public class Problem10866 {
 				if (num<=0) {
 					System.out.println(-1);
 				}else {
-					if((rear -1) < 0) {
-						System.out.println(deque[max -1]);
-					}else {
-						System.out.println(deque[rear -1]);
-					}
+					System.out.println(deque[rear -1 == 0 ? max -1 : rear -1]);
 				}
 			} else if (input[0].equals("empty")) {
 				if (num<=0) {
