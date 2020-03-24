@@ -31,29 +31,30 @@ class IntQueue {
 			max = 0;
 		}
 	}
-	
-	public int enque(int x) throws OverflowIntQueueException{
-		if(num >= max) {
+
+	public int enque(int x) throws OverflowIntQueueException {
+		if (num >= max) {
 			throw new OverflowIntQueueException();
 		}
 		que[rear++] = x;
 		num++;
-		
-		if(rear == max)
+
+		if (rear == max)
 			rear = 0;
-		
+
 		return x;
-		
+
 	}
-	
-	public int deque() throws EmptyIntQueueException{
-		if (num <= 0) throw new EmptyIntQueueException();
-		
+
+	public int deque() throws EmptyIntQueueException {
+		if (num <= 0)
+			throw new EmptyIntQueueException();
+
 		int x = que[front++];
 		num--;
-		
-		if(front == max)
-			front =0;
+
+		if (front == max)
+			front = 0;
 		return x;
 	}
 }
