@@ -16,7 +16,7 @@ public class Test04 {
 		if (num == 0)
 			return;
 		hanoi(num - 1, from, other, to);
-		stringBuffer.append(from + " " + to + "\n");
+		stringBuffer.append("원반[" + num + "]은" + from + " " + to + "\n");
 		hanoi(num - 1, other, to, from);
 		answer++;
 	}
