@@ -3,13 +3,12 @@ package programmers.bruteforce;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Stack;
 
 public class SafeBoat {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] num = { 100, 40, 30, 70, 60 };
+		int[] num = { 100, 40, 30, 70, 60 ,500,300};
 		System.out.println(solution(num, 100));
 	}
 
