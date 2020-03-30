@@ -72,7 +72,6 @@ public class Problem1931 {
 		public static final Comparator<Room> ROOM_ORDER = new RoomOrderComparator();
 
 		private static class RoomOrderComparator implements Comparator<Room> {
-
 			@Override
 			public int compare(Room o1, Room o2) {
 				return o1.end_t > o2.end_t ? 1
