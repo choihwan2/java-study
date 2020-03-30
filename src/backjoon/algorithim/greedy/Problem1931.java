@@ -34,10 +34,6 @@ public class Problem1931 {
 		}
 		Collections.sort(room, Room.ROOM_ORDER);
 
-		for (Room room2 : room) {
-			System.out.println(room2.toString());
-		}
-
 		Room tempRoom = room.get(0);
 		answer++;
 		for(int i = 1; i< room.size(); i++) {
@@ -52,7 +48,6 @@ public class Problem1931 {
 	static class Room {
 		private int start_t;
 		private int end_t;
-		private int work_t;
 
 		public int getStart_t() {
 			return start_t;
@@ -70,33 +65,18 @@ public class Problem1931 {
 			this.end_t = end_t;
 		}
 
-		public int getWork_t() {
-			return work_t;
-		}
-
-		public void setWork_t(int work_t) {
-			this.work_t = work_t;
-		}
-
 		public Room(int s, int l) {
 			this.start_t = s;
 			this.end_t = l;
-			this.work_t = l - s;
 		}
+		public static final Comparator<Room> ROOM_ORDER = new RoomOrderComparator();
 
-		@Override
-		public String toString() {
-			return "Room [start_t=" + start_t + ", end_t=" + end_t + ", work_t=" + work_t + "]";
-		}
-
-		public static final Comparator<Room> ROOM_ORDER = new RoomOrderComparator2();
-
-		private static class RoomOrderComparator2 implements Comparator<Room> {
+		private static class RoomOrderComparator implements Comparator<Room> {
 
 			@Override
 			public int compare(Room o1, Room o2) {
-				return o1.end_t > o2.end_t ? 2
-						: o1.end_t < o2.end_t ? -2 : o1.start_t > o2.start_t ? 1 : o1.start_t < o2.start_t ? -1 : 0;
+				return o1.end_t > o2.end_t ? 1
+						: o1.end_t < o2.end_t ? -1 : o1.start_t > o2.start_t ? 1 : o1.start_t < o2.start_t ? -1 : 0;
 			}
 		}
 
