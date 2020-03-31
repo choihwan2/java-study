@@ -1,4 +1,4 @@
-package backjoon.algorithim.bruteforce;
+package backjoon.algorithim.greedy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
