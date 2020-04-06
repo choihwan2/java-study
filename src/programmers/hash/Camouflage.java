@@ -36,7 +36,7 @@ public class Camouflage {
 		for (int i : num_list) {
 			answer *= (i+1);
 		}
-		return answer - 1;
+		return answer;
 	}
 
 }
