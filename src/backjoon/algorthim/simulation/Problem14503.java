@@ -48,8 +48,8 @@ public class Problem14503 {
 		}
 
 		while (isMove) {
-			cleanArea(x, y);
-			checkArea(x, y, dir);
+			cleanArea();
+			checkArea();
 		}
 		System.out.println(answer);
 
@@ -63,14 +63,14 @@ public class Problem14503 {
 
 	}
 
-	public static void cleanArea(int x, int y) {
+	public static void cleanArea() {
 		if (map[y][x] == '0') {
 			map[y][x] = '2';
 			answer++;
 		}
 	}
 
-	public static void checkArea(int x_m, int y_m, int dir_m) {
+	public static void checkArea() {
 		rotation = 0;
 		while (rotation < 4) {
 			if (map[y + C_DIR[dir][0]][x + C_DIR[dir][1]] == '0') {
