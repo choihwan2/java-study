@@ -46,8 +46,8 @@ public class Problem14499 {
 
 		Queue<Integer> work_q = new LinkedList<Integer>();
 
-		x = Integer.parseInt(in[2]);
-		y = Integer.parseInt(in[3]);
+		x = Integer.parseInt(in[3]);
+		y = Integer.parseInt(in[2]);
 		K = Integer.parseInt(in[4]);
 
 		map = new int[height][width];
