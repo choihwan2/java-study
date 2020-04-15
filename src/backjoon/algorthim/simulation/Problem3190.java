@@ -5,7 +5,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /*
  * 게임은 NxN 정사각 보드위에서 진행되고
@@ -29,40 +31,93 @@ import java.util.LinkedList;
 public class Problem3190 {
 	static int N, K, L;
 	static int[][] map;
+	static int time = 0;
 	static final int[][] DIR = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+	static boolean isGame = true;
+	static Map<Integer, Character> dir_map = new HashMap<Integer, Character>();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		map = new int[N + 1][N + 1];
+		map = new int[N + 2][N + 2];
 		K = Integer.parseInt(br.readLine());
 
-		for (int i = 0; i < N + 1; i++) {
+		for (int i = 0; i < N + 2; i++) {
 			map[0][i] = 1;
-			map[N][i] = 1;
+			map[N + 1][i] = 1;
 			map[i][0] = 1;
-			map[i][N] = 1;
-		} // 맵 제일 겉에 부분 벽으로 만들기.
+			map[i][N + 1] = 1;
+		} // 맵 제일 끝 부분 벽으로 만들기.
 
 		for (int i = 0; i < K; i++) {
 			String[] a_xy = br.readLine().split(" ");
-			map[Integer.parseInt(a_xy[1])][Integer.parseInt(a_xy[0])] = 3;
+			map[Integer.parseInt(a_xy[0])][Integer.parseInt(a_xy[1])] = 3;
 		}
 
+		
+
 		L = Integer.parseInt(br.readLine());
+		for (int i = 0; i < L; i++) {
+			String[] arr_dir = br.readLine().split(" ");
+			dir_map.put(Integer.parseInt(arr_dir[0]), arr_dir[1].toCharArray()[0]);
+		}
+		Snake snake = new Snake();
+		while (isGame) {
+			time++;
+			snake.go();
+			if (dir_map.containsKey(time)) {
+				snake.changeDir(dir_map.get(time));
+			}
+
+		}
+		System.out.println(time);
 		
-		
+//		for (int i = 0; i < map.length; i++) {
+//			for (int j = 0; j < map[i].length; j++) {
+//				System.out.print(map[i][j]);
+//			}
+//			System.out.println();
+//		}
 
 	}
 
-	class Snake {
-		int length = 1;
+	static class Snake {
 		Deque<Point> body = new LinkedList<Point>();
-		int[] dir = DIR[0];
-		
+		int dir = 0;
+
 		public Snake() {
-			body.addLast(new Point(1,1));
+			body.addLast(new Point(1, 1));
 		}
-		
+
+		public void go() {
+			int y = body.peekLast().y + DIR[dir][1];
+			int x = body.peekLast().x + DIR[dir][0];
+
+
+			for (Point pt : body) {
+				if (pt.x == x && pt.y == y) {
+					isGame = false;
+				}
+			}
+			if (map[y][x] == 1) {
+				isGame = false;
+				return;
+			} else if (map[y][x] == 0) {
+				body.pollFirst();
+			} else if (map[y][x] == 3) {
+				map[y][x] = 0;
+			}
+
+			body.addLast(new Point(x, y));
+		}
+
+		public void changeDir(char c) {
+			if (c == 'D') {
+				dir = (dir + 1) % 4;
+			} else if (c == 'L') {
+				dir = dir - 1 >= 0 ? dir - 1 : 3;
+			}
+		}
+
 	}
 }
