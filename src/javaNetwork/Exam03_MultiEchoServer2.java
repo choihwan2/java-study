@@ -18,18 +18,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
-public class Selft_MultiEchoServer extends Application {
+public class Exam03_MultiEchoServer2 extends Application {
 	private TextArea ta;
 	private Button onBtn, closeBtn;
-	Socket s;
-	Thread serverThread;
-	ServerSocket server;
-	
-	// Thread Pool을 생성 제한된 숫자의 Thread를 가지고 있는 pool 이 아니라 필요한 갯수만큼 Thread 를 가지고 잇는 Thread Pool을 생성
-	
+	private Socket s;
+	private ServerSocket server;
+
+	// Thread Pool을 생성 제한된 숫자의 Thread를 가지고 있는 pool 이 아니라 필요한 갯수만큼 Thread 를 가지고 잇는
+	// Thread Pool을 생성
+
 	private ExecutorService excutorService = Executors.newCachedThreadPool();
-	
-	
+
 	private void printMSG(String msg) {
 		Platform.runLater(() -> {
 			ta.appendText(msg + "\n");
@@ -48,24 +47,21 @@ public class Selft_MultiEchoServer extends Application {
 		onBtn.setPrefSize(250, 50);
 		onBtn.setOnAction(e -> {
 			try {
-				server = new ServerSocket(8989);
-				serverThread = new Thread(() -> {
+				server = new ServerSocket(7979);
+				Runnable serverRunnable = () -> {
 					printMSG("서버를 시작합니다!");
 					while (true) {
 						try {
 							s = server.accept();
-							MyEchoRunnalbe runnable = new MyEchoRunnalbe(s);
-							Thread t = new Thread(runnable);
-							t.setDaemon(true);
-							t.start();
+							MyEchoRunnable runnable = new MyEchoRunnable(s);
+							excutorService.execute(runnable);
 						} catch (IOException e2) {
-							e2.printStackTrace();
 							break;
 						}
 
 					}
-				});
-				serverThread.start();
+				};
+				excutorService.execute(serverRunnable);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -76,9 +72,12 @@ public class Selft_MultiEchoServer extends Application {
 		closeBtn.setOnAction(e -> {
 			try {
 				printMSG("서버를 종료합니다.");
-				s.close();
-				serverThread.interrupt();
-				server.close();
+				if (s != null)
+					s.close();
+				if (excutorService != null)
+					excutorService.shutdown();
+				if (server != null)
+					server.close();
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -107,21 +106,28 @@ public class Selft_MultiEchoServer extends Application {
 
 	}
 
-	class MyEchoRunnalbe implements Runnable {
+	class MyEchoRunnable implements Runnable {
 		private Socket s;
+		private BufferedReader br;
+		private PrintWriter pw;
 
-		public MyEchoRunnalbe(Socket s) {
+		public MyEchoRunnable(Socket s) {
 			this.s = s;
+			try {
+				this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+				this.pw = new PrintWriter(s.getOutputStream());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		@Override
 		public void run() {
 			try {
 				printMSG(Thread.currentThread().getName() + "님이 입장하였습니다!");
-				BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-				PrintWriter pw = new PrintWriter(s.getOutputStream());
 				String revString = "";
-				while (true) {
+				while (!Thread.currentThread().isInterrupted()) {
 					revString = br.readLine();
 					if (revString == null || revString.equals("@EXIT")) {
 						break;

@@ -47,7 +47,7 @@ public class Exam02_EchoClient extends Application {
 				// 연결되면 TextArea의 내용을 지워요!
 				ta.clear();
 
-				s = new Socket("localhost", 8989);
+				s = new Socket("localhost", 7979);
 //				String address = s.getInetAddress().toString();
 //				System.out.println(address);
 				printMSG("서버 접속 성공!");
@@ -58,7 +58,23 @@ public class Exam02_EchoClient extends Application {
 				// 접속 성공 했으니 입력상자 활성화!
 				input.setDisable(false);
 				conBtn.setDisable(true);
+				Thread thread = new Thread(new Runnable() {
 
+					@Override
+					public void run() {
+						String revString = "";
+						try {
+							while ((revString = br.readLine()) != null) {
+								printMSG(revString);
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				});
+				thread.start();
 			} catch (UnknownHostException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -78,18 +94,26 @@ public class Exam02_EchoClient extends Application {
 			input.clear();
 
 			if (!msg.equals("@EXIT")) {
+//				try {
+//					String revString = br.readLine();
+//					printMSG(revString);
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+
+			} else {
+				printMSG("[서버와의 연결종료]");
+				input.setDisable(true);
+				conBtn.setDisable(false);
 				try {
-					String revString = br.readLine();
-					printMSG(revString);
+					br.close();
+					pr.close();
+					s.close();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-			}else {
-				printMSG("[서버와의 연결종료]");
-				input.setDisable(true);
-				conBtn.setDisable(false);
 			}
 		});
 
