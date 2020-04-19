@@ -10,7 +10,7 @@ public class Problem14891 {
 	static int[][] rot;
 
 	public static void main(String[] args) throws IOException {
-		int answer = 0;
+		int answer = 1;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		for (int i = 0; i < 4; i++) {
 			wheel[i] = br.readLine().toCharArray();
