@@ -26,7 +26,6 @@ public class Problem1021 {
 		for (int i = 0; i < num_str.length; i++) {
 			num_arr[i] = Integer.parseInt(num_str[i]);
 		}
-		
 
 	}
 }
