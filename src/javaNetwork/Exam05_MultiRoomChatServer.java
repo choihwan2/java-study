@@ -58,7 +58,7 @@ public class Exam05_MultiRoomChatServer extends Application {
 						try {
 							Socket s = server.accept();
 							System.out.println("클라이언트가 들어왔습니다.");
-							MyChatRunnable runnable = new MyChatRunnable(s);
+							ChatRunnable runnable = new ChatRunnable(s);
 							excutorService.execute(runnable);
 						} catch (IOException e2) {
 							break;
@@ -108,71 +108,85 @@ public class Exam05_MultiRoomChatServer extends Application {
 	}
 
 	static class ChatRoomManageObject {
-		private Map<String, List<MyChatRunnable>> map_chatRunnable = new HashMap<String, List<MyChatRunnable>>();
-		private List<String> room_title = new ArrayList<String>();
-		private Map<String, List<String>> room_member = new HashMap<String, List<String>>();
-	
-		public void createRoom(String room_t, MyChatRunnable user) {
-			map_chatRunnable.put(room_t, new ArrayList<MyChatRunnable>());
-			room_title.add(room_t);
-			room_member.put(room_t, new ArrayList<String>());
+		private List<ChatRunnable> list_chatRunnable = new ArrayList<ChatRunnable>();
+		private Map<String, List<ChatRunnable>> map_chatRunnable = new HashMap<String, List<ChatRunnable>>();
+		private List<String> r_name = new ArrayList<String>();
+
+		public void connServer(ChatRunnable user) {
+			list_chatRunnable.add(user);
 		}
 
-		public void joinRoom(String room_t, MyChatRunnable user) {
-			map_chatRunnable.get(room_t).add(user);
-			room_member.get(room_t).add(user.getUserId());
+		public void disconnServer(ChatRunnable user) {
+			list_chatRunnable.remove(user);
 		}
 
-		public void outRoom(String room_t, MyChatRunnable user) {
-			map_chatRunnable.get(room_t).remove(user);
-			room_member.get(room_t).remove(user.getUserId());
+		public void createRoom(String room, ChatRunnable user) {
+			map_chatRunnable.put(room, new ArrayList<ChatRunnable>());
+			r_name.add(room);
 		}
 
-		public void sendMsg(String room_t, String msg) {
-			for (MyChatRunnable MyChatRunnable : map_chatRunnable.get(room_t)) {
-				PrintWriter pw = MyChatRunnable.getPw();
+		public void joinRoom(String room, ChatRunnable user) {
+			map_chatRunnable.get(room).add(user);
+		}
+
+		public void outRoom(String room, ChatRunnable user) {
+			map_chatRunnable.get(room).remove(user);
+		}
+
+		public void refreshRoom() {
+			StringBuilder stb = new StringBuilder();
+			stb.append(ChatHelper.P_ROOM);
+			for (String str : getr_name()) {
+				stb.append(str + " ");
+			}
+			for (ChatRunnable chatRunnable : list_chatRunnable) {
+				chatRunnable.getPw().println(stb.toString());
+				chatRunnable.getPw().flush();
+			}
+		}
+
+		public void sendMsg(String room, String msg) {
+			for (ChatRunnable ChatRunnable : map_chatRunnable.get(room)) {
+				PrintWriter pw = ChatRunnable.getPw();
 				pw.println(msg);
 				pw.flush();
 			}
 		}
 
-		public Map<String, List<MyChatRunnable>> getMap_chatRunnable() {
+		public Map<String, List<ChatRunnable>> getMap_chatRunnable() {
 			return map_chatRunnable;
 		}
 
-		public void setMap_chatRunnable(Map<String, List<MyChatRunnable>> map_chatRunnable) {
+		public void setMap_chatRunnable(Map<String, List<ChatRunnable>> map_chatRunnable) {
 			this.map_chatRunnable = map_chatRunnable;
 		}
 
-		public Map<String, List<String>> getRoom_member() {
-			return room_member;
+		public List<String> getr_name() {
+			return r_name;
 		}
 
-		public void setRoom_member(Map<String, List<String>> room_member) {
-			this.room_member = room_member;
-		}
-
-		public List<String> getRoom_title() {
-			return room_title;
-		}
-
-		public void setRoom_title(List<String> room_title) {
-			this.room_title = room_title;
+		public void setr_name(List<String> r_name) {
+			this.r_name = r_name;
 		}
 
 	}
 
-	class MyChatRunnable implements Runnable {
+	class ChatRunnable implements Runnable {
 		private Socket s;
 		private BufferedReader br;
 		private PrintWriter pw;
 		private String userId;
+		private String userRoom = null;
 
 		public String getUserId() {
 			return userId;
 		}
 
-		public MyChatRunnable(Socket s) {
+		public String getUserRoom() {
+			return userRoom;
+		}
+
+		public ChatRunnable(Socket s) {
 			this.s = s;
 			try {
 				this.br = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -192,24 +206,42 @@ public class Exam05_MultiRoomChatServer extends Application {
 					revString = br.readLine();
 					if (revString == null || revString.equals("@EXIT")) {
 						break;
-					} else if (revString.startsWith("/join")) {
-						String roomTitle = revString.substring(6);
-						chatManager.joinRoom(roomTitle, this);
-						for (String member : chatManager.getRoom_member().get(roomTitle)) {
-							pw.append(member + " ");
+					} else if (revString.startsWith(ChatHelper.P_JOIN)) {
+						if (userRoom != null) {
+							chatManager.outRoom(userRoom, this);
+						}
+						String roomTitle = revString.substring(ChatHelper.P_JOIN_LEN);
+						chatManager.joinRoom(userRoom, this);
+						pw.append(ChatHelper.P_JOIN);
+						for (ChatRunnable member : chatManager.getMap_chatRunnable().get(roomTitle)) {
+							pw.append(member.getUserId() + " ");
 						}
 						pw.println();
 						pw.flush();
-					} else if (revString.startsWith("/create")) {
-						String roomTitle = revString.substring(6);
+					} else if (revString.startsWith(ChatHelper.P_CREATE)) {
+						// 방만들기 요청이 들어왔을때 방을 생성
+						// 방을 만들었을때 서버에 접속해있는 클라이언트 들에게 방목록을 보내줌.
+						if (userRoom != null) {
+							chatManager.outRoom(userRoom, this);
+						}
+						String roomTitle = revString.substring(ChatHelper.P_CREATE_LEN);
+						userRoom = roomTitle;
+						System.out.println(roomTitle);
 						chatManager.createRoom(roomTitle, this);
-					} else if (revString.equals("/connect")) {
-						for (String str : chatManager.getRoom_title()) {
-							pw.print(str + " "); 
+						chatManager.refreshRoom();
+					} else if (revString.startsWith(ChatHelper.P_CONNECT)) {
+						// 접속했을때 방목록을 클라이언트에 보내줌
+						userId = revString.substring(ChatHelper.P_CONNECT_LEN);
+						System.out.println("User id : " + userId);
+						chatManager.connServer(this);
+						pw.append(ChatHelper.P_CONNECT);
+						for (String str : chatManager.getr_name()) {
+							pw.append(str + " ");
 						}
 						pw.println();
 						pw.flush();
 					} else {
+
 					}
 				}
 				if (pw != null)

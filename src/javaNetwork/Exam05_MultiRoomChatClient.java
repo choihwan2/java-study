@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -101,13 +102,12 @@ public class Exam05_MultiRoomChatClient extends Application {
 			Optional<String> result = dialog.showAndWait();
 			String entered = "";
 			if (result.isPresent()) {
-				// 닉네임을 입력하고 확인버튼을 누른경우!
+				// 채팅방을 입력하고 확인버튼을 누른경우!
 				entered = result.get();
 			}
 
 			// 방이름이 서버에 전달이 되어야해요!
-
-			roomListView.getItems().add(entered);
+			user.createRoom(entered);
 			printMsg("채팅방 : " + entered + "가 추가되었습니다.");
 
 		});
@@ -165,6 +165,24 @@ public class Exam05_MultiRoomChatClient extends Application {
 		launch();
 	}
 
+	public static void reRoomList(String[] rooms) {
+		Platform.runLater(() -> {
+			roomListView.getItems().clear();
+			for (String room : rooms) {
+				roomListView.getItems().add(room);
+			}
+		});
+	}
+
+	public static void reMemberList(String[] members) {
+		Platform.runLater(() -> {
+			participantsListView.getItems().clear();
+			for (String memeber : members) {
+				participantsListView.getItems().add(memeber);
+			}
+		});
+	}
+
 	class User implements Runnable {
 		private String userId;
 		private Socket s;
@@ -187,59 +205,44 @@ public class Exam05_MultiRoomChatClient extends Application {
 		}
 
 		public void connServer() {
-			try {
-				printMsg(userId + "로 서버에 접속하였습니다.");
-				pw.println("/connect");
-				pw.flush();
-				String[] roomStr = br.readLine().split(" ");
-				for (String room : roomStr) {
-					roomListView.getItems().add(room);
-				}
-				printMsg(userId + "방 목록을 받아왔습니다.");
-			} catch (UnknownHostException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			pw.println(ChatHelper.P_CONNECT + userId);
+			printMsg(userId + "로 서버에 접속하였습니다.");
+			pw.flush();
 		}
 
 		public void joinRoom(String roomName) {
-			participantsListView.getItems().clear();
-			pw.println("/join " + roomName);
+			pw.println(ChatHelper.P_JOIN + roomName);
 			pw.flush();
-			String[] roomMember;
-			try {
-				roomMember = br.readLine().split(" ");
-				for (String member : roomMember) {
-					participantsListView.getItems().add(member);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 		public void createRoom(String roomName) {
-			participantsListView.getItems().clear();
-			pw.println("/create " + roomName);
+			pw.println(ChatHelper.P_CREATE + roomName);
 			pw.flush();
-			String[] roomMember;
-			try {
-				roomMember = br.readLine().split(" ");
-				for (String member : roomMember) {
-					participantsListView.getItems().add(member);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 		@Override
 		public void run() {
 			connServer();
+			String revString = "";
+			while ((revString != null)) {
+				try {
+					revString = br.readLine();
+					if (revString.startsWith(ChatHelper.P_CONNECT)) {
+						String[] roomStr = revString.substring(ChatHelper.P_CONNECT_LEN).split(" ");
+						reRoomList(roomStr);
+						System.out.println(Arrays.toString(roomStr));
+					} else if (revString.startsWith(ChatHelper.P_ROOM)) {
+						String[] roomStr = revString.substring(ChatHelper.P_ROOM_LEN).split(" ");
+						reRoomList(roomStr);
+					} else if (revString.startsWith(ChatHelper.P_JOIN)) {
+						String[] r_memberStr = revString.substring(ChatHelper.P_JOIN_LEN).split(" ");
+						reMemberList(r_memberStr);
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 
 	}
