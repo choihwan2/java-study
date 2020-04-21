@@ -33,12 +33,13 @@ public class Exam05_MultiRoomChatClient extends Application {
 	private Button disconnBtn; // 채팅서버와 연결을 종료하기 위한 버튼
 	private Button createRoomBtn; // 새로운 채팅방을 만드는 버튼
 	private Button connRoomBtn; // 채팅방에 들어가는 버튼
+	private Button disconnRoomBtn; // 채팅방에 나가는 버튼
 	private FlowPane menuFlowPane;
 	private static ListView<String> roomListView; // 채팅방 목록을 표시하는 리스트뷰
 	private static ListView<String> participantsListView; // 채팅방에 참여하고 있는 사람 목록
 	private User user;
 
-	private ExecutorService excutorService = Executors.newCachedThreadPool();
+	private ExecutorService excutorService;
 
 	private void printMsg(String msg) {
 		Platform.runLater(() -> {
@@ -75,6 +76,7 @@ public class Exam05_MultiRoomChatClient extends Application {
 		connBtn = new Button("Chat 서버와 접속");
 		connBtn.setPrefSize(150, 40);
 		connBtn.setOnAction(e -> {
+			excutorService = Executors.newCachedThreadPool();
 			Dialog<String> dialog = new TextInputDialog("자신의 NickName을 입력하세요!");
 			dialog.setTitle("닉네임설정");
 			dialog.setHeaderText("닉네임 설정입니다. 적절한 이름을 입력하세요!");
@@ -85,10 +87,11 @@ public class Exam05_MultiRoomChatClient extends Application {
 				// 닉네임을 입력하고 확인버튼을 누른경우!
 				entered = result.get();
 			}
-			// 원래는 서버에 접속해서 방 목록을 받아와야 해요!
 			user = new User(entered, 5959);
 			excutorService.execute(user);
 			createRoomBtn.setDisable(false);
+			connRoomBtn.setDisable(false);
+			disconnBtn.setDisable(false);
 			connBtn.setDisable(true);
 		});
 
@@ -103,17 +106,16 @@ public class Exam05_MultiRoomChatClient extends Application {
 			Optional<String> result = dialog.showAndWait();
 			String entered = "";
 			if (result.isPresent()) {
-				// 채팅방을 입력하고 확인버튼을 누른경우!
 				entered = result.get();
 			}
 
-			// 방이름이 서버에 전달이 되어야해요!
 			user.createRoom(entered);
 			printMsg("채팅방 : " + entered + "가 추가되었습니다.");
 
 		});
 
 		connRoomBtn = new Button("채팅방 접속!");
+		connRoomBtn.setDisable(true);
 		connRoomBtn.setPrefSize(150, 40);
 		connRoomBtn.setOnAction(e -> {
 			// 1. 어떤 방을 선택했는지를 알아와요!
@@ -137,16 +139,27 @@ public class Exam05_MultiRoomChatClient extends Application {
 				inputTF.clear();
 			});
 
-			disconnBtn = new Button("방 나가기");
-			disconnBtn.setPrefSize(150, 40);
-			disconnBtn.setOnAction(e2 -> {
+			disconnRoomBtn = new Button("방 나가기");
+			disconnRoomBtn.setPrefSize(150, 40);
+			disconnRoomBtn.setOnAction(e2 -> {
 				user.outRoom();
 				participantsListView.getItems().clear();
 				root.setBottom(menuFlowPane);
 			});
 			inputFlowPane.getChildren().add(inputTF);
-			inputFlowPane.getChildren().add(disconnBtn);
+			inputFlowPane.getChildren().add(disconnRoomBtn);
 			root.setBottom(inputFlowPane);
+		});
+
+		disconnBtn = new Button("채팅 서버와 연결 끊기");
+		disconnBtn.setPrefSize(150, 40);
+		disconnBtn.setDisable(true);
+		disconnBtn.setOnAction(e4 -> {
+			roomListView.getItems().clear();
+//			user.disconnServer();
+			createRoomBtn.setDisable(true);
+			connRoomBtn.setDisable(true);
+			connBtn.setDisable(false);
 		});
 
 		menuFlowPane = new FlowPane();
@@ -156,6 +169,7 @@ public class Exam05_MultiRoomChatClient extends Application {
 		menuFlowPane.getChildren().add(connBtn);
 		menuFlowPane.getChildren().add(createRoomBtn);
 		menuFlowPane.getChildren().add(connRoomBtn);
+		menuFlowPane.getChildren().add(disconnBtn);
 
 		root.setBottom(menuFlowPane);
 
@@ -165,7 +179,7 @@ public class Exam05_MultiRoomChatClient extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("멀티룸 채팅프로그램");
 		primaryStage.setOnCloseRequest(e -> {
-
+//			user.disconnServer();
 		});
 		primaryStage.show();
 	}
@@ -219,6 +233,21 @@ public class Exam05_MultiRoomChatClient extends Application {
 			pw.flush();
 		}
 
+		public void disconnServer() {
+			System.out.println("서버와의 접속을 종료합니다.");
+			try {
+				if (this.br != null)
+					this.br.close();
+				if (this.pw != null)
+					this.pw.close();
+				if (this.s != null)
+					this.s.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		public void joinRoom(String roomName) {
 			pw.println(ChatHelper.P_JOIN + roomName);
 			pw.flush();
@@ -243,9 +272,8 @@ public class Exam05_MultiRoomChatClient extends Application {
 		public void run() {
 			connServer();
 			String revString = "";
-			while ((revString != null)) {
-				try {
-					revString = br.readLine();
+			try {
+				while ((revString = br.readLine()) != null) {
 					if (revString.startsWith(ChatHelper.P_CONNECT)) {
 						String[] roomStr = revString.substring(ChatHelper.P_CONNECT_LEN).split(ChatHelper.DIV_R);
 						reRoomList(roomStr);
@@ -258,10 +286,11 @@ public class Exam05_MultiRoomChatClient extends Application {
 					} else {
 						printMsg(revString);
 					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
+//				disconnServer();
+			} catch (IOException e) {
+				System.out.println("비정상 적인 종료가 발견되었습니다.");
+//				disconnServer();
 			}
 		}
 

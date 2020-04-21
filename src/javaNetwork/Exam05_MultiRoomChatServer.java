@@ -30,7 +30,7 @@ public class Exam05_MultiRoomChatServer extends Application {
 	// Thread Pool을 생성 제한된 숫자의 Thread를 가지고 있는 pool 이 아니라 필요한 갯수만큼 Thread 를 가지고 잇는
 	// Thread Pool을 생성
 
-	private ExecutorService excutorService = Executors.newCachedThreadPool();
+	private ExecutorService excutorService;
 	private ChatRoomManageObject chatManager = new ChatRoomManageObject();
 
 	private void printMSG(String msg) {
@@ -52,6 +52,7 @@ public class Exam05_MultiRoomChatServer extends Application {
 		onBtn.setOnAction(e -> {
 			try {
 				server = new ServerSocket(5959);
+				excutorService = Executors.newCachedThreadPool();
 				Runnable serverRunnable = () -> {
 					printMSG("서버를 시작합니다!");
 					while (true) {
@@ -215,12 +216,8 @@ public class Exam05_MultiRoomChatServer extends Application {
 		public void run() {
 			try {
 				String revString = "";
-
-				while (!Thread.currentThread().isInterrupted()) {
-					revString = br.readLine();
-					if (revString == null || revString.equals("@EXIT")) {
-						break;
-					} else if (revString.startsWith(ChatHelper.P_JOIN)) {
+				while ((revString = br.readLine()) != null) {
+					if (revString.startsWith(ChatHelper.P_JOIN)) {
 						if (userRoom != null) {
 							chatManager.outRoom(this);
 						}
@@ -241,7 +238,6 @@ public class Exam05_MultiRoomChatServer extends Application {
 					} else if (revString.startsWith(ChatHelper.P_CONNECT)) {
 						// 접속했을때 방목록을 클라이언트에 보내줌
 						userId = revString.substring(ChatHelper.P_CONNECT_LEN);
-						System.out.println("User id : " + userId);
 						chatManager.connServer(this);
 						chatManager.refreshRoom();
 					} else if (revString.startsWith(ChatHelper.P_OUT)) {
