@@ -33,6 +33,7 @@ public class Exam05_MultiRoomChatClient extends Application {
 	private Button disconnBtn; // 채팅서버와 연결을 종료하기 위한 버튼
 	private Button createRoomBtn; // 새로운 채팅방을 만드는 버튼
 	private Button connRoomBtn; // 채팅방에 들어가는 버튼
+	private FlowPane menuFlowPane;
 	private static ListView<String> roomListView; // 채팅방 목록을 표시하는 리스트뷰
 	private static ListView<String> participantsListView; // 채팅방에 참여하고 있는 사람 목록
 	private User user;
@@ -115,16 +116,13 @@ public class Exam05_MultiRoomChatClient extends Application {
 		connRoomBtn = new Button("채팅방 접속!");
 		connRoomBtn.setPrefSize(150, 40);
 		connRoomBtn.setOnAction(e -> {
-			// 1. 어떤 ㅂ아을 선택했는지를 알아와요!
+			// 1. 어떤 방을 선택했는지를 알아와요!
 			String roomName = roomListView.getSelectionModel().getSelectedItem();
+			user.joinRoom(roomName);
 			printMsg(roomName + "방에 입장하였습니다!");
 
 			// 서버에 접속해서 현재 방에 참여하고 있는 참여자 목록을 받아와요!
 			// 목록을 받아오면 참여자 리스트뷰에 출력
-			participantsListView.getItems().add("홍길동");
-			participantsListView.getItems().add("신사임당");
-			participantsListView.getItems().add("이순신");
-			participantsListView.getItems().add("김찬호");
 
 			// 밑부분의 메뉴를 채팅을 입력할 수 있는 화면으로 전환!
 			FlowPane inputFlowPane = new FlowPane();
@@ -134,13 +132,24 @@ public class Exam05_MultiRoomChatClient extends Application {
 
 			TextField inputTF = new TextField();
 			inputTF.setPrefSize(400, 40);
+			inputTF.setOnAction(e3 -> {
+				user.sendMsg(inputTF.getText());
+				inputTF.clear();
+			});
 
+			disconnBtn = new Button("방 나가기");
+			disconnBtn.setPrefSize(150, 40);
+			disconnBtn.setOnAction(e2 -> {
+				user.outRoom();
+				participantsListView.getItems().clear();
+				root.setBottom(menuFlowPane);
+			});
 			inputFlowPane.getChildren().add(inputTF);
-
+			inputFlowPane.getChildren().add(disconnBtn);
 			root.setBottom(inputFlowPane);
 		});
 
-		FlowPane menuFlowPane = new FlowPane();
+		menuFlowPane = new FlowPane();
 		menuFlowPane.setPadding(new Insets(10, 10, 10, 10));
 		menuFlowPane.setPrefSize(700, 40);
 		menuFlowPane.setHgap(10);
@@ -220,6 +229,16 @@ public class Exam05_MultiRoomChatClient extends Application {
 			pw.flush();
 		}
 
+		public void sendMsg(String msg) {
+			pw.println(msg);
+			pw.flush();
+		}
+
+		public void outRoom() {
+			pw.println(ChatHelper.P_OUT + userId);
+			pw.flush();
+		}
+
 		@Override
 		public void run() {
 			connServer();
@@ -228,15 +247,16 @@ public class Exam05_MultiRoomChatClient extends Application {
 				try {
 					revString = br.readLine();
 					if (revString.startsWith(ChatHelper.P_CONNECT)) {
-						String[] roomStr = revString.substring(ChatHelper.P_CONNECT_LEN).split(" ");
+						String[] roomStr = revString.substring(ChatHelper.P_CONNECT_LEN).split(ChatHelper.DIV_R);
 						reRoomList(roomStr);
-						System.out.println(Arrays.toString(roomStr));
 					} else if (revString.startsWith(ChatHelper.P_ROOM)) {
-						String[] roomStr = revString.substring(ChatHelper.P_ROOM_LEN).split(" ");
+						String[] roomStr = revString.substring(ChatHelper.P_ROOM_LEN).split(ChatHelper.DIV_R);
 						reRoomList(roomStr);
 					} else if (revString.startsWith(ChatHelper.P_JOIN)) {
-						String[] r_memberStr = revString.substring(ChatHelper.P_JOIN_LEN).split(" ");
+						String[] r_memberStr = revString.substring(ChatHelper.P_JOIN_LEN).split(ChatHelper.DIV_R);
 						reMemberList(r_memberStr);
+					} else {
+						printMsg(revString);
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

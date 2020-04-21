@@ -11,4 +11,8 @@ public class ChatHelper {
 	static final int P_ROOM_LEN = P_ROOM.length();
 	static final String P_CONNECT = "@/p_connect ";
 	static final int P_CONNECT_LEN = P_CONNECT.length();
+	static final String P_OUT = "@/p_out ";
+	static final int P_OUT_LEN = P_OUT.length();
+
+	static final String DIV_R = "!@#!!";
 }

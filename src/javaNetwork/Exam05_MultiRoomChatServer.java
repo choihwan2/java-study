@@ -129,15 +129,16 @@ public class Exam05_MultiRoomChatServer extends Application {
 			map_chatRunnable.get(room).add(user);
 		}
 
-		public void outRoom(String room, ChatRunnable user) {
-			map_chatRunnable.get(room).remove(user);
+		public void outRoom(ChatRunnable user) {
+			map_chatRunnable.get(user.userRoom).remove(user);
+			refreshMember(user);
 		}
 
 		public void refreshRoom() {
 			StringBuilder stb = new StringBuilder();
 			stb.append(ChatHelper.P_ROOM);
 			for (String str : getr_name()) {
-				stb.append(str + " ");
+				stb.append(str + ChatHelper.DIV_R);
 			}
 			for (ChatRunnable chatRunnable : list_chatRunnable) {
 				chatRunnable.getPw().println(stb.toString());
@@ -145,10 +146,23 @@ public class Exam05_MultiRoomChatServer extends Application {
 			}
 		}
 
-		public void sendMsg(String room, String msg) {
-			for (ChatRunnable ChatRunnable : map_chatRunnable.get(room)) {
+		public void refreshMember(ChatRunnable user) {
+			StringBuilder stb = new StringBuilder();
+			stb.append(ChatHelper.P_JOIN);
+			List<ChatRunnable> r_member = map_chatRunnable.get(user.getUserRoom());
+			for (ChatRunnable member : r_member) {
+				stb.append(member.getUserId() + ChatHelper.DIV_R);
+			}
+			for (ChatRunnable member : r_member) {
+				member.getPw().println(stb.toString());
+				member.getPw().flush();
+			}
+		}
+
+		public void sendMsg(ChatRunnable user, String msg) {
+			for (ChatRunnable ChatRunnable : map_chatRunnable.get(user.getUserRoom())) {
 				PrintWriter pw = ChatRunnable.getPw();
-				pw.println(msg);
+				pw.println(user.getUserId() + ":" + msg);
 				pw.flush();
 			}
 		}
@@ -208,25 +222,20 @@ public class Exam05_MultiRoomChatServer extends Application {
 						break;
 					} else if (revString.startsWith(ChatHelper.P_JOIN)) {
 						if (userRoom != null) {
-							chatManager.outRoom(userRoom, this);
+							chatManager.outRoom(this);
 						}
 						String roomTitle = revString.substring(ChatHelper.P_JOIN_LEN);
-						chatManager.joinRoom(userRoom, this);
-						pw.append(ChatHelper.P_JOIN);
-						for (ChatRunnable member : chatManager.getMap_chatRunnable().get(roomTitle)) {
-							pw.append(member.getUserId() + " ");
-						}
-						pw.println();
-						pw.flush();
+						userRoom = roomTitle;
+						chatManager.joinRoom(roomTitle, this);
+						chatManager.refreshMember(this);
 					} else if (revString.startsWith(ChatHelper.P_CREATE)) {
 						// 방만들기 요청이 들어왔을때 방을 생성
 						// 방을 만들었을때 서버에 접속해있는 클라이언트 들에게 방목록을 보내줌.
 						if (userRoom != null) {
-							chatManager.outRoom(userRoom, this);
+							chatManager.outRoom(this);
 						}
 						String roomTitle = revString.substring(ChatHelper.P_CREATE_LEN);
 						userRoom = roomTitle;
-						System.out.println(roomTitle);
 						chatManager.createRoom(roomTitle, this);
 						chatManager.refreshRoom();
 					} else if (revString.startsWith(ChatHelper.P_CONNECT)) {
@@ -234,14 +243,12 @@ public class Exam05_MultiRoomChatServer extends Application {
 						userId = revString.substring(ChatHelper.P_CONNECT_LEN);
 						System.out.println("User id : " + userId);
 						chatManager.connServer(this);
-						pw.append(ChatHelper.P_CONNECT);
-						for (String str : chatManager.getr_name()) {
-							pw.append(str + " ");
-						}
-						pw.println();
-						pw.flush();
+						chatManager.refreshRoom();
+					} else if (revString.startsWith(ChatHelper.P_OUT)) {
+						userId = revString.substring(ChatHelper.P_OUT_LEN);
+						chatManager.outRoom(this);
 					} else {
-
+						chatManager.sendMsg(this, revString);
 					}
 				}
 				if (pw != null)
