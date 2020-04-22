@@ -108,7 +108,7 @@ public class Exam05_MultiRoomChatServer extends Application {
 
 	}
 
-	static class ChatRoomManageObject {
+	class ChatRoomManageObject {
 		private List<ChatRunnable> list_chatRunnable = new ArrayList<ChatRunnable>();
 		private Map<String, List<ChatRunnable>> map_chatRunnable = new HashMap<String, List<ChatRunnable>>();
 		private List<String> r_name = new ArrayList<String>();
@@ -119,6 +119,8 @@ public class Exam05_MultiRoomChatServer extends Application {
 
 		public void disconnServer(ChatRunnable user) {
 			list_chatRunnable.remove(user);
+			user.getPw().println(ChatHelper.P_DISCONNECT);
+			user.getPw().flush();
 		}
 
 		public void createRoom(String room, ChatRunnable user) {
@@ -131,8 +133,10 @@ public class Exam05_MultiRoomChatServer extends Application {
 		}
 
 		public void outRoom(ChatRunnable user) {
-			map_chatRunnable.get(user.userRoom).remove(user);
-			refreshMember(user);
+			if (user.getUserRoom() != null) {
+				map_chatRunnable.get(user.userRoom).remove(user);
+				refreshMember(user);
+			}
 		}
 
 		public void refreshRoom() {
@@ -201,6 +205,10 @@ public class Exam05_MultiRoomChatServer extends Application {
 			return userRoom;
 		}
 
+		public PrintWriter getPw() {
+			return pw;
+		}
+
 		public ChatRunnable(Socket s) {
 			this.s = s;
 			try {
@@ -218,9 +226,7 @@ public class Exam05_MultiRoomChatServer extends Application {
 				String revString = "";
 				while ((revString = br.readLine()) != null) {
 					if (revString.startsWith(ChatHelper.P_JOIN)) {
-						if (userRoom != null) {
-							chatManager.outRoom(this);
-						}
+						chatManager.outRoom(this);
 						String roomTitle = revString.substring(ChatHelper.P_JOIN_LEN);
 						userRoom = roomTitle;
 						chatManager.joinRoom(roomTitle, this);
@@ -228,9 +234,7 @@ public class Exam05_MultiRoomChatServer extends Application {
 					} else if (revString.startsWith(ChatHelper.P_CREATE)) {
 						// 방만들기 요청이 들어왔을때 방을 생성
 						// 방을 만들었을때 서버에 접속해있는 클라이언트 들에게 방목록을 보내줌.
-						if (userRoom != null) {
-							chatManager.outRoom(this);
-						}
+						chatManager.outRoom(this);
 						String roomTitle = revString.substring(ChatHelper.P_CREATE_LEN);
 						userRoom = roomTitle;
 						chatManager.createRoom(roomTitle, this);
@@ -243,6 +247,11 @@ public class Exam05_MultiRoomChatServer extends Application {
 					} else if (revString.startsWith(ChatHelper.P_OUT)) {
 						userId = revString.substring(ChatHelper.P_OUT_LEN);
 						chatManager.outRoom(this);
+					} else if (revString.startsWith(ChatHelper.P_DISCONNECT)) {
+						userId = revString.substring(ChatHelper.P_DISCONNECT_LEN);
+						chatManager.outRoom(this);
+						chatManager.disconnServer(this);
+						break;
 					} else {
 						chatManager.sendMsg(this, revString);
 					}
@@ -258,10 +267,6 @@ public class Exam05_MultiRoomChatServer extends Application {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-
-		public PrintWriter getPw() {
-			return pw;
 		}
 
 	}

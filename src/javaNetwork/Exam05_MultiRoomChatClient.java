@@ -156,10 +156,11 @@ public class Exam05_MultiRoomChatClient extends Application {
 		disconnBtn.setDisable(true);
 		disconnBtn.setOnAction(e4 -> {
 			roomListView.getItems().clear();
-//			user.disconnServer();
+			user.disconnServer();
 			createRoomBtn.setDisable(true);
 			connRoomBtn.setDisable(true);
 			connBtn.setDisable(false);
+			disconnBtn.setDisable(true);
 		});
 
 		menuFlowPane = new FlowPane();
@@ -234,18 +235,8 @@ public class Exam05_MultiRoomChatClient extends Application {
 		}
 
 		public void disconnServer() {
-			System.out.println("서버와의 접속을 종료합니다.");
-			try {
-				if (this.br != null)
-					this.br.close();
-				if (this.pw != null)
-					this.pw.close();
-				if (this.s != null)
-					this.s.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			pw.println(ChatHelper.P_DISCONNECT + userId);
+			pw.flush();
 		}
 
 		public void joinRoom(String roomName) {
@@ -283,14 +274,36 @@ public class Exam05_MultiRoomChatClient extends Application {
 					} else if (revString.startsWith(ChatHelper.P_JOIN)) {
 						String[] r_memberStr = revString.substring(ChatHelper.P_JOIN_LEN).split(ChatHelper.DIV_R);
 						reMemberList(r_memberStr);
+					} else if (revString.startsWith(ChatHelper.P_DISCONNECT)) {
+						break;
 					} else {
 						printMsg(revString);
 					}
 				}
-//				disconnServer();
+				if (br != null)
+					br.close();
+				if (pw != null)
+					pw.close();
+				if (s != null)
+					s.close();
+				if (excutorService != null)
+					excutorService.shutdown();
 			} catch (IOException e) {
 				System.out.println("비정상 적인 종료가 발견되었습니다.");
-//				disconnServer();
+				try {
+
+					if (br != null)
+						br.close();
+					if (pw != null)
+						pw.close();
+					if (s != null)
+						s.close();
+					if (excutorService != null)
+						excutorService.shutdown();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 
