@@ -1,12 +1,12 @@
 package backjoon.algorithm.simulation;
 
 import java.awt.Point;
-import java.util.Collection;
-import java.util.Collections;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import javafx.geometry.Side;
 
 public class Problem15685 {
 	/*
@@ -18,13 +18,26 @@ public class Problem15685 {
 	 * (↓)
 	 */
 	static final int[][] DIR = { { 1, 0 }, { 0, -1 }, { -1, 0 }, { 0, 1 } };
+	static int[][] map = new int[101][101];
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int curv_n = Integer.parseInt(br.readLine());
+		for (int i = 0; i < curv_n; i++) {
+			String[] curv = br.readLine().split(" ");
+			int x = Integer.parseInt(curv[0]);
+			int y = Integer.parseInt(curv[1]);
+			int dir = Integer.parseInt(curv[2]);
+			int gen = Integer.parseInt(curv[3]);
+			DragonCurve dCurve = new DragonCurve(x, y, dir);
+			dCurve.nextGeneration(gen);
+			dCurve.checkArea();
+		}
+		int answer = checkDrangonCurve();
+		System.out.println(answer);
 	}
 
-	class DragonCurve {
+	static class DragonCurve {
 		int x;
 		int y;
 		LinkedList<Point> body = new LinkedList<Point>();
@@ -57,6 +70,24 @@ public class Problem15685 {
 			return new Point(x, y);
 		}
 
+		public void checkArea() {
+			for (Point pt : body) {
+				map[pt.y][pt.x] = 1;
+			}
+		}
 	}
 
+	public static int checkDrangonCurve() {
+		int answer = 0;
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
+				if (map[i][j] == 1 && map[i][j + 1] == 1) {
+					if (map[i + 1][j] == 1 && map[i + 1][j + 1] == 1) {
+						answer++;
+					}
+				}
+			}
+		}
+		return answer;
+	}
 }
