@@ -232,8 +232,6 @@ public class Exam05_MultiRoomChatServer extends Application {
 						chatManager.joinRoom(roomTitle, this);
 						chatManager.refreshMember(this);
 					} else if (revString.startsWith(ChatHelper.P_CREATE)) {
-						// 방만들기 요청이 들어왔을때 방을 생성
-						// 방을 만들었을때 서버에 접속해있는 클라이언트 들에게 방목록을 보내줌.
 						chatManager.outRoom(this);
 						String roomTitle = revString.substring(ChatHelper.P_CREATE_LEN);
 						userRoom = roomTitle;
