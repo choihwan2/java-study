@@ -1,4 +1,4 @@
-package selftest.java.thread.procon;
+package selftest.java.mythread.procon;
 
 public class Producer implements Runnable {
 	private SharedObject obj;

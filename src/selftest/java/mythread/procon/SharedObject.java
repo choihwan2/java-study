@@ -1,4 +1,4 @@
-package selftest.java.thread.procon;
+package selftest.java.mythread.procon;
 
 import java.util.LinkedList;
 

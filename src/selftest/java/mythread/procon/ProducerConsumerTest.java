@@ -1,4 +1,4 @@
-package selftest.java.thread.procon;
+package selftest.java.mythread.procon;
 
 /*
  * 생산자 : 1개의 Thread로 표현

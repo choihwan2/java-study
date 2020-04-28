@@ -1,4 +1,4 @@
-package selftest.java.thread;
+package selftest.java.mythread;
 
 public class ThreadTest {
 	

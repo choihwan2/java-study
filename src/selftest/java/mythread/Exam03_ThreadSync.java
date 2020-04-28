@@ -1,4 +1,4 @@
-package selftest.java.thread;
+package selftest.java.mythread;
 
 // 공유객체를 만들기 위한 class, 일반적으로 Singleton 으로 작성
 class SharedObject {

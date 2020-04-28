@@ -1,4 +1,4 @@
-package selftest.java.thread;
+package selftest.java.mythread;
 
 // 1초 마다 자신의 이름을 도스창에 출력
 // 한번씩 번갈아서 출력 => 순서를 제어하고싶다!
