@@ -2,7 +2,6 @@ package programmers.heap;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.Stack;
 
 public class RamenFactory {
 
@@ -35,23 +34,6 @@ public class RamenFactory {
 		}
 		return answer;
 
-	}
-
-}
-
-class Supply implements Comparable<Supply> {
-	int date;
-	int sup;
-
-	public Supply(int date, int sup) {
-		super();
-		this.date = date;
-		this.sup = sup;
-	}
-
-	@Override
-	public int compareTo(Supply o) {
-		return o.sup > sup ? 1 : -1;
 	}
 
 }
