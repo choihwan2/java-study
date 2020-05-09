@@ -21,7 +21,7 @@ public class Resignation {
 			works[i] = new Work(Integer.parseInt(TP[0]), Integer.parseInt(TP[1]));
 		}
 		sol(0, 0, 0);
-		
+
 		System.out.println(max);
 
 	}
@@ -31,12 +31,7 @@ public class Resignation {
 			return;
 
 		if (day <= N) {
-			if (min_num < num) {
-				min_num = num;
-				max = tem_max;
-			}else if (min_num == num) {
-				max = Math.max(max, tem_max);
-			}
+			max = Math.max(max, tem_max);
 		}
 
 		for (int i = day; i < N; i++) {
