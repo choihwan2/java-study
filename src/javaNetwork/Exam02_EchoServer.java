@@ -11,7 +11,7 @@ public class Exam02_EchoServer {
 	public static void main(String[] args) {
 		// 1. 서버프로그램이기 때문에 ServerSocket 이 필요
 		try {
-			ServerSocket server = new ServerSocket(7777); // client 의 접속을 받기위해 존재
+			ServerSocket server = new ServerSocket(6020); // client 의 접속을 받기위해 존재
 			System.out.println("서버가 기동되었습니당!");
 			// 2. 클라이언트가 접속할 수 있게 ServerSocket 에 accept() 호출
 			Socket s = server.accept(); // client 와 연결되어 데이터 통신을 하기 위해 존재
