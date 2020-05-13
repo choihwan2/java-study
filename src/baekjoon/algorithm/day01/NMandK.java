@@ -29,13 +29,13 @@ public class NMandK {
 				map[i][j] = Integer.parseInt(input[j]);
 			}
 		}
-		sol(0);
+		sol(0,0);
 
 		System.out.println(max);
 
 	}
 
-	public static void sol(int num) {
+	public static void sol(int px, int num) {
 		if (num == K) {
 			int temp = 0;
 			for (int i : list) {
@@ -45,13 +45,13 @@ public class NMandK {
 			return;
 		}
 
-		for (int i = 0; i < N; i++) {
+		for (int i = px; i < N; i++) {
 			for (int j = 0; j < M; j++) {
 				if (map_bool[i][j] > 0)
 					continue;
 				check(j, i);
 				list[num] = map[i][j];
-				sol(num + 1);
+				sol(i,num + 1);
 				uncheck(j, i);
 			}
 		}

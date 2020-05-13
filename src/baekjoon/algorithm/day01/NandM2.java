@@ -21,11 +21,11 @@ public class NandM2 {
 		list = new int[M];
 		bool_list = new boolean[N + 1]; // 숫자는 1부터 시작해서 가니 N + 1 배열의 위치 = 숫자
 		stb = new StringBuilder();
-		solution(0);
+		solution(1,0);
 		System.out.print(stb);
 	}
 
-	public static void solution(int num) {
+	public static void solution(int start, int num) {
 		if (num == M) {
 			for (int i = 0; i < list.length; i++) {
 				stb.append(list[i]);
@@ -35,16 +35,9 @@ public class NandM2 {
 			return;
 		}
 
-		for (int i = 1; i <= N; i++) {
-			if (bool_list[i] == true)
-				continue;
-			if (num > 0 && list[num - 1] > i) {
-				continue;
-			}
-			bool_list[i] = true;
+		for (int i = start; i <= N; i++) {
 			list[num] = i;
-			solution(num + 1);
-			bool_list[i] = false;
+			solution(i + 1,num + 1);
 		}
 
 	}
