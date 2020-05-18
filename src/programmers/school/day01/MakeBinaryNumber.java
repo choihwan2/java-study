@@ -3,13 +3,14 @@ package programmers.school.day01;
 import java.util.ArrayList;
 
 public class MakeBinaryNumber {
-    static boolean[] boolArr;
-	static ArrayList<Integer> binList;
-	static int answer;
+	boolean[] boolArr;
+	ArrayList<Integer> binList;
+	int answer;
+	final int MAX = 3000;
 
 	public int solution(int[] nums) {
 		answer = 0;
-		boolArr = new boolean[3000];
+		boolArr = new boolean[MAX];
 		binList = new ArrayList<>();
 
 		boolArr[2] = true;
@@ -32,8 +33,7 @@ public class MakeBinaryNumber {
 		return answer;
 	}
 
-
-	public void dfs(int start, int[] nums, int num, int sum) {
+	void dfs(int start, int[] nums, int num, int sum) {
 		if (num == 3) {
 			if (boolArr[sum])
 				answer++;
