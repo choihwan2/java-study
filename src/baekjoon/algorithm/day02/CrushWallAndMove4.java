@@ -10,6 +10,10 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class CrushWallAndMove4 {
+	
+	/*
+	 * 처음 배열의 자료구조를 잘못 잡았다.. int 로 한후 다시 도전해보자.
+	 */
 
 	static char[][] baseMap;
 	static int[][] groupMap;
