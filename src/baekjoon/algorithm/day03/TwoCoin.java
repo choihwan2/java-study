@@ -9,7 +9,7 @@ import java.util.Queue;
 public class TwoCoin {
 
 	static final int[] dx = { 0, 0, -1, 1 };
-	static final int[] dy = { 1, -1, 0, 0 };
+	static final int[] dy = { -1, 1, 0, 0 };
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -38,12 +38,12 @@ public class TwoCoin {
 		while (!que.isEmpty()) {
 			int x1 = que.poll();
 			int y1 = que.poll();
-			
+
 			int x2 = que.poll();
 			int y2 = que.poll();
-			
-			for(int i = 0; i< 4; i++) {
-				
+
+			for (int i = 0; i < 4; i++) {
+				int tX1;
 			}
 		}
 
