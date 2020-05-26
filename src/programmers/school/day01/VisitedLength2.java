@@ -1,7 +1,7 @@
 package programmers.school.day01;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VisitedLength2 {
 	private final int[] dx = { 0, 0, -1, 1 };
@@ -15,7 +15,7 @@ public class VisitedLength2 {
 		int answer = 0;
 		Position head = new Position(x, y);
 		Position tail = new Position(x, y);
-		List<Path> path = new ArrayList<>();
+		Set<Path> path = new HashSet<>();
 
 		for (int i = 0; i < dirs.length(); i++) {
 			char dir = dirs.charAt(i);
@@ -66,14 +66,16 @@ public class VisitedLength2 {
 			this.y = y;
 		}
 
-		@Override
-		public boolean equals(Object obj) {
-			Position compare = (Position) obj;
-			if (this.x == compare.x && this.y == compare.y) {
-				return true;
-			}
-			return false;
-		}
+		
+		
+//		@Override
+//		public boolean equals(Object obj) {
+//			Position compare = (Position) obj;
+//			if (this.x == compare.x && this.y == compare.y) {
+//				return true;
+//			}
+//			return false;
+//		}
 
 	}
 
@@ -85,19 +87,19 @@ public class VisitedLength2 {
 			this.nowP = nowP;
 			this.beforeP = beforeP;
 		}
-
-		@Override
-		public boolean equals(Object obj) {
-			Path compare = (Path) obj;
-			if (this.nowP.equals(compare.nowP) && this.beforeP.equals(compare.beforeP)) {
-				return true;
-			} else if (this.nowP.equals(compare.beforeP) && this.beforeP.equals(compare.nowP)) {
-				return true;
-			}
-			return false;
-		}
+		
+		
+//		@Override
+//		public boolean equals(Object obj) {
+//			Path compare = (Path) obj;
+//			if (this.nowP.equals(compare.nowP) && this.beforeP.equals(compare.beforeP)) {
+//				return true;
+//			} else if (this.nowP.equals(compare.beforeP) && this.beforeP.equals(compare.nowP)) {
+//				return true;
+//			}
+//			return false;
+//		}
 
 	}
-
 
 }
