@@ -1,6 +1,7 @@
 package programmers.school.day01;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class VisitedLength2 {
@@ -17,12 +18,15 @@ public class VisitedLength2 {
 
 		for (int i = 0; i < dirs.length(); i++) {
 			char dir = dirs.charAt(i);
-			if (checkGo(changeDir(dir)) != null) {
+			Position temp = checkGo(changeDir(dir));
+			if (temp != null) {
 				tail = head;
-				head = new Position(x, y);
+				head = temp;
 				Path temPath = new Path(head, tail);
-				if (!path.contains(temPath)) {
+				Path revPath = new Path(tail, head);
+				if (!path.contains(temPath) && !path.contains(revPath)) {
 					path.add(temPath);
+					path.add(revPath);
 					answer++;
 				}
 			}
@@ -66,30 +70,17 @@ public class VisitedLength2 {
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getEnclosingInstance().hashCode();
-			result = prime * result + x;
-			result = prime * result + y;
-			return result;
+			return Objects.hash(this.x,this.y);
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
 			Position other = (Position) obj;
 			if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
 				return false;
-			if (x != other.x)
-				return false;
-			if (y != other.y)
-				return false;
-			return true;
+			if (x == other.x && y == other.y)
+				return true;
+			return false;
 		}
 
 		private VisitedLength2 getEnclosingInstance() {
@@ -109,43 +100,23 @@ public class VisitedLength2 {
 
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getEnclosingInstance().hashCode();
-			result = prime * result + ((beforeP == null) ? 0 : beforeP.hashCode());
-			result = prime * result + ((nowP == null) ? 0 : nowP.hashCode());
-			return result;
+			return nowP.hashCode() + beforeP.hashCode();
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
 			Path other = (Path) obj;
 			if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
 				return false;
-			if (beforeP == null) {
-				if (other.beforeP != null)
-					return false;
-			} else if (!beforeP.equals(other.beforeP))
-				return false;
-			if (nowP == null) {
-				if (other.nowP != null)
-					return false;
-			} else if (!nowP.equals(other.nowP))
-				return false;
-			return true;
+			if(nowP.equals(other.nowP) && beforeP.equals(other.beforeP)) {
+				return true;
+			}
+			return false;
 		}
 
 		private VisitedLength2 getEnclosingInstance() {
 			return VisitedLength2.this;
 		}
-		
-		
 
 	}
 
