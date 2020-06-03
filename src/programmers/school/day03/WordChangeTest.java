@@ -8,7 +8,7 @@ class WordChangeTest {
 
 	@Test
 	void test() {
-		WordChange wordChange = new WordChange();
+		WordChange2 wordChange = new WordChange2();
 		Assert.assertEquals(4, wordChange.solution("hit", "cog", new String[] {"hot", "dot", "dog", "lot", "log", "cog"}));
 		Assert.assertEquals(0, wordChange.solution("hit", "cog", new String[] {"hot", "dot", "dog", "lot", "log"}));
 	}
