@@ -3,6 +3,9 @@ package selftest.ssafy;
 public class LCS {
     public static void main(String[] args) {
         System.out.println(getLCSLength("ABC","ABC"));
+
+        int[] num = {};
+//        System.out.println(Arrays.sort(num));
     }
 
     private static int getLCSLength(String a, String b) {

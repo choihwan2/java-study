@@ -1,4 +1,4 @@
-package programmers;
+package programmers.leveltest;
 
 import java.util.StringTokenizer;
 
