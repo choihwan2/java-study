@@ -1,16 +1,14 @@
 package programmers.school.day03;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class WordChange2 {
 
-    private class Word {
+    private class WordNode {
         String word;
         int cnt;
 
-        public Word(String word, int cnt) {
+        public WordNode(String word, int cnt) {
             this.word = word;
             this.cnt = cnt;
         }
@@ -26,26 +24,25 @@ public class WordChange2 {
 
     public int solution(String begin, String target, String[] words) {
         int answer = 0;
-        boolean[] wordBool = new boolean[words.length];
+        Set<String> usedWordSet = new HashSet<>();
 
         if (!Arrays.asList(words).contains(target))
             return 0;
-        Queue<Word> que = new LinkedList<>();
-        que.add(new Word(begin, 0));
+        Queue<WordNode> que = new LinkedList<>();
+        que.add(new WordNode(begin, 0));
 
         while (!que.isEmpty()) {
             if (que.peek().word.equals(target)) {
-                answer = que.poll().cnt;
+                answer = que.peek().cnt;
                 break;
             }
 
-            Word nowWord = que.poll();
-
+            WordNode nowNode = que.poll();
             for (int i = 0; i < words.length; i++) {
-                if (wordBool[i]) continue;
-                if (isChangeable(nowWord.word, words[i])) {
-                    wordBool[i] = true;
-                    que.add(new Word(words[i], nowWord.cnt + 1));
+                if (usedWordSet.contains(words[i])) continue;
+                if (isChangeable(nowNode.word, words[i])) {
+                    usedWordSet.add(words[i]);
+                    que.add(new WordNode(words[i], nowNode.cnt + 1));
                 }
             }
         }
@@ -63,6 +60,6 @@ public class WordChange2 {
                 }
             }
         }
-        return num == 0 ? false : true;
+        return num == 1;
     }
 }
