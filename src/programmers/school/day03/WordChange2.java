@@ -52,12 +52,9 @@ public class WordChange2 {
 
     private boolean isChangeable(String str, String str2) {
         int num = 0;
-        for (int i = 0; i < str.length(); i++) {
+        for (int i = 0; i < str.length() && num < 2; i++) {
             if (str.charAt(i) != str2.charAt(i)) {
                 num++;
-                if (num == 2) {
-                    return false;
-                }
             }
         }
         return num == 1;
