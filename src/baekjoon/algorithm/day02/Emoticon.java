@@ -3,61 +3,61 @@ package baekjoon.algorithm.day02;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Emoticon {
-	static final int MAX = 4000;
-	static final int MIN = 2;
+    static final int MAX = 4000;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-		int[] list = new int[MAX];
-		boolean[] bool_list = new boolean[MAX];
-		Queue<Integer> que = new LinkedList<Integer>();
-		int first = 1;
+        int[][] list = new int[1001][1001];
 
-		list[first] = 0;
-		bool_list[first] = true;
-		que.add(first);
-		/*
-		 * 1
-		 * 2 => 2
-		 * 4 => 4 // 3 => 3
-		 * 8 => 6 6 => 5
-		 * 16 => 8 12,7 => 7 5 => 6 
-		 */
-		while (!que.isEmpty()) {
-			int v = que.poll();
-			if (v % 2 == 0 && v + v / 2 < MAX) {
-				if (!bool_list[v + v / 2]) {
-					bool_list[v + v / 2] = true;
-					list[v + v / 2] = list[v] + 1;
-					que.add(v + v / 2);
-				}
-			}
+        for (int i = 0; i < 1000; i++) {
+            Arrays.fill(list[i], -1);
+        }
 
-			if (v - 1 >= MIN) {
-				if (!bool_list[v - 1]) {
-					bool_list[v - 1] = true;
-					list[v - 1] = list[v] + 1;
-					que.add(v - 1);
-				}
-			}
-			if (v * 2 < MAX) {
-				if (!bool_list[v * 2]) {
-					bool_list[v * 2] = true;
-					list[v * 2] = list[v] + 2;
-					que.add(v * 2);
-				}
-			}
+        Queue<Integer> que = new LinkedList<>();
+        list[1][0] = 0;
 
-		}
+        que.add(1);
+        que.add(0);
 
-		System.out.println(list[N]);
+        while (!que.isEmpty()) {
+            int now = que.poll();
+            int copy = que.poll();
 
-	}
+            if (now < 0 || now + copy < 0 || now > 1000 || now + copy > 1000 || now -1 <0 || now -1 > 1000) continue;
+
+            if (list[now + copy][copy] == -1) {
+                list[now + copy][copy] = list[now][copy] + 1;
+                que.add(now + copy);
+                que.add(copy);
+            }
+
+            if (list[now][now] == -1) {
+                list[now][now] = list[now][copy] + 1;
+                que.add(now);
+                que.add(now);
+            }
+
+            if (list[now - 1][copy] == -1) {
+                list[now - 1][copy] = list[now][copy] + 1;
+                que.add(now - 1);
+                que.add(copy);
+            }
+        }
+        int answer = -1;
+        for (int i = 0; i < 1000; i++) {
+
+        }
+        System.out.println(answer);
+
+
+    }
+
 
 }
