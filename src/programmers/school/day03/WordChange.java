@@ -43,6 +43,6 @@ public class WordChange {
 				}
 			}
 		}
-		return num == 0 ? false : true;
+		return num != 0;
 	}
 }
