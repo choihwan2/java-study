@@ -6,7 +6,6 @@ public class DartGame {
     public int solution(String dartResult) {
         int answer = 0;
         Stack<Integer> answerStk = new Stack<>();
-        /// TODO 실수로 10까지를 생각을 안했다....
         for (int i = 0; i < dartResult.length(); i++) {
             char c = dartResult.charAt(i);
             if (c >= '0' && c <= '9') {
