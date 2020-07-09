@@ -6,20 +6,33 @@ public class DartGame {
     public int solution(String dartResult) {
         int answer = 0;
         Stack<Integer> answerStk = new Stack<>();
-
+        /// TODO 실수로 10까지를 생각을 안했다....
         for (int i = 0; i < dartResult.length(); i++) {
             char c = dartResult.charAt(i);
             if (c >= '0' && c <= '9') {
+                if (c == '1') {
+                    char next = dartResult.charAt(i + 1);
+                    if (next == '0') {
+                        answerStk.push(10);
+                        i++;
+                        continue;
+                    }
+                }
                 answerStk.push(Character.getNumericValue(c));
             } else if (c == '#') {
                 answerStk.push(answerStk.pop() * -1);
             } else if (c == '*') {
                 Stack<Integer> tempStk = new Stack<>();
-                while (!answerStk.isEmpty()) {
-                    tempStk.push(answerStk.pop() * 2);
+
+                for (int j = 0; j < 2; j++) {
+                    if (!answerStk.isEmpty()) {
+                        tempStk.push(answerStk.pop() * 2);
+                    }
                 }
-                while (!tempStk.isEmpty()) {
-                    answerStk.push(tempStk.pop());
+                for (int z = 0; z < 2; z++) {
+                    if (!tempStk.isEmpty()) {
+                        answerStk.push(tempStk.pop());
+                    }
                 }
             } else if (c == 'S') {
 
