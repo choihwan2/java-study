@@ -1,4 +1,4 @@
-package selftest.java;
+package selftest.java.multicampus;
 
 import java.io.BufferedReader;
 import java.io.IOException;

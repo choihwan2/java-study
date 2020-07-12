@@ -1,4 +1,4 @@
-package selftest.java;
+package selftest.java.multicampus;
 
 public class Test03 {
 	public static void main(String[] args) {

@@ -1,6 +1,4 @@
-package selftest.java;
-
-import java.util.Arrays;
+package selftest.java.multicampus;
 
 public class StudentTest {
 
