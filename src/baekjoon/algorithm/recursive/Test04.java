@@ -1,4 +1,4 @@
-package baekjoon.algorithm.repeatmethod;
+package baekjoon.algorithm.recursive;
 
 
 public class Test04 {

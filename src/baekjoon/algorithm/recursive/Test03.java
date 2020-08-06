@@ -1,4 +1,4 @@
-package baekjoon.algorithm.repeatmethod;
+package baekjoon.algorithm.recursive;
 
 import java.util.Arrays;
 import java.util.Scanner;
