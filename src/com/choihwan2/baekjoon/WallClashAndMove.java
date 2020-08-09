@@ -3,8 +3,6 @@ package com.choihwan2.baekjoon;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import com.sun.org.apache.regexp.internal.recompile;
-
 /*
  * 
 6 4
