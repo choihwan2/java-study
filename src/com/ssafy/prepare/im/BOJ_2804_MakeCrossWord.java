@@ -1,4 +1,4 @@
-package baekjoon.algorithm.simulation;
+package com.ssafy.prepare.im;
 
 import java.util.Arrays;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package baekjoon.algorithm.simulation;
+package com.ssafy.prepare.im;
 
 import java.util.LinkedList;
 import java.util.Queue;
