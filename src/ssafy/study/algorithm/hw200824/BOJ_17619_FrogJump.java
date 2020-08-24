@@ -1,6 +1,7 @@
 package ssafy.study.algorithm.hw200824;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
@@ -44,16 +45,15 @@ public class BOJ_17619_FrogJump {
 			tSet.add(new Tree(i, s, d));
 		}
 		Tree firstT = tSet.pollFirst();
-		int l = firstT.start;
 		int r = firstT.end;
 		int p = firstT.index;
 		while (!tSet.isEmpty()) {
 			Tree t = tSet.pollFirst();
-			if (t.start >= l && t.start <= r) {
+			if (t.start <= r) {
+				
 				pA[t.index] = p;
 				r = Math.max(t.end, r);
 			} else {
-				l = t.start;
 				r = t.end;
 				p = t.index;
 			}
