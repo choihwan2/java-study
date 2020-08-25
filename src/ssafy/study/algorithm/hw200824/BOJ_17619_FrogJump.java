@@ -34,9 +34,11 @@ public class BOJ_17619_FrogJump {
 		int n = Integer.parseInt(stk.nextToken());
 		int q = Integer.parseInt(stk.nextToken());
 		int[] pA = new int[n + 1];
+		
 		for (int i = 0; i < pA.length; i++) {
 			pA[i] = i;
 		}
+		
 		TreeSet<Tree> tSet = new TreeSet<>();
 		for (int i = 1; i <= n; i++) {
 			stk = new StringTokenizer(br.readLine());
@@ -44,30 +46,29 @@ public class BOJ_17619_FrogJump {
 			int d = Integer.parseInt(stk.nextToken());
 			tSet.add(new Tree(i, s, d));
 		}
+		
 		Tree firstT = tSet.pollFirst();
 		int r = firstT.end;
 		int p = firstT.index;
 		while (!tSet.isEmpty()) {
 			Tree t = tSet.pollFirst();
 			if (t.start <= r) {
-				
-				pA[t.index] = p;
 				r = Math.max(t.end, r);
+				pA[t.index] = p;
 			} else {
 				r = t.end;
 				p = t.index;
 			}
 		}
-		StringBuilder answerStb = new StringBuilder();
+		
 		for (int i = 0; i < q; i++) {
 			stk = new StringTokenizer(br.readLine());
 			int s = Integer.parseInt(stk.nextToken());
 			int e = Integer.parseInt(stk.nextToken());
 			if (pA[s] == pA[e])
-				answerStb.append("1\n");
+				System.out.println("1");
 			else
-				answerStb.append("0\n");
+				System.out.println("0");
 		}
-		System.out.println(answerStb);
 	}
 }
