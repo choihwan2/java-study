@@ -39,14 +39,13 @@ public class BOJ_2206_WallClashAndMove1 {
 			map[i] = br.readLine().toCharArray();
 		}
 		Queue<Node> que = new LinkedList<>();
-		que.add(new Node(0, 0, 1, 1));
+		que.add(new Node(0, 0, 1, 0));
 		isVisited[0][0][0] = true;
 		while (!que.isEmpty()) {
 			Node node = que.poll();
-			if(node.r == R -1 && node.c == C-1) {
-				if(answer == -1 || answer > node.cnt) {
-					answer = node.cnt;					
-				}
+			if (node.r == R - 1 && node.c == C - 1) {
+				answer = node.cnt;
+				break;
 			}
 			for (int d = 0; d < 4; d++) {
 				int mX = node.r + dx[d];
@@ -55,20 +54,13 @@ public class BOJ_2206_WallClashAndMove1 {
 				int chance = node.chance;
 				if (!isInMap(mX, mY))
 					continue;
-				
-				if(chance == 1) {
-					if(map[mX][mY] == '0' && !isVisited[mX][mY][0]) {
-						isVisited[mX][mY][0] = true;
-						que.add(new Node(mX,mY, cnt + 1, chance));
-					}else if(map[mX][mY] == '1' && !isVisited[mX][mY][0]) {
-						isVisited[mX][mY][0] = true;
-						que.add(new Node(mX,mY, cnt + 1, chance - 1));
-					}
-				}else if(chance == 0) {
-					if(map[mX][mY] == '0' && !isVisited[mX][mY][1]) {
-						isVisited[mX][mY][1] = true;
-						que.add(new Node(mX,mY, cnt + 1, chance));
-					}
+
+				if (map[mX][mY] == '0' && !isVisited[mX][mY][chance]) {
+					isVisited[mX][mY][chance] = true;
+					que.add(new Node(mX, mY, cnt + 1, chance));
+				} else if (map[mX][mY] == '1' && !isVisited[mX][mY][1] && chance == 0) {
+					isVisited[mX][mY][1] = true;
+					que.add(new Node(mX, mY, cnt + 1, chance + 1));
 				}
 			}
 		}
