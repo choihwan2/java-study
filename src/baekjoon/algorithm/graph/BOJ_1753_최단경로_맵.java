@@ -80,13 +80,13 @@ public class BOJ_1753_최단경로_맵 {
 				if (!isVisited[i] || !edgeMap.containsKey(i))
 					continue;
 				distMap = edgeMap.get(i);
-				for (int vertex : distMap.keySet()) {
-					int nowDist = distMap.getvertex);
-					if (dist[vertex] > nowDist + current.totalDistance) {
-						dist[vertex] = nowDist + current.totalDistance;
-						pq.add(new Node(vertex, dist[vertex]));
-					}
-				}
+//				for (int vertex : distMap.keySet()) {
+//					int nowDist = distMap.getvertex();
+//					if (dist[vertex] > nowDist + current.totalDistance) {
+//						dist[vertex] = nowDist + current.totalDistance;
+//						pq.add(new Node(vertex, dist[vertex]));
+//					}
+//				}
 
 			}
 		}
