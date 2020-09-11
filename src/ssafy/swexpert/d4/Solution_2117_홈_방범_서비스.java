@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Solution_2117_홈_방범_서비스 {
-	static int N, M, map[][];
+	static int N, M, map[][],max;
 	static int[] cost = new int[41];
 
 	public static void main(String[] args) throws IOException {
