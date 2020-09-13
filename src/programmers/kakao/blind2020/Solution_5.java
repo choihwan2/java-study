@@ -38,11 +38,11 @@ public class Solution_5 {
 				playTime[j]++;
 			}
 		}
-		
+
 		int start = 0;
 		int end = advTime;
 		int startTime = 0;
-		if(end == playTime.length - 1) {
+		if (end == playTime.length - 1) {
 			return "00:00:00";
 		}
 		long sum = 0;
@@ -52,54 +52,51 @@ public class Solution_5 {
 		long max = sum;
 		for (int i = end; i < playTime.length; i++) {
 			sum += playTime[i] - playTime[start];
-			if(max < sum) {
+			if (max < sum) {
 				max = sum;
 				startTime = start + 1;
 			}
 			start++;
 		}
-		
+
 		answer = convertTime(startTime);
 		System.out.println(answer);
-		
-		
 
 		return answer;
 	}
 
-	
-
 	private int getTime(int h, int m, int s) {
 		return h * HOUR + m * MIN + s;
 	}
-	
+
 	private String convertTime(int startTime) {
 		StringBuilder stb = new StringBuilder();
-		int h = startTime/HOUR;
+		int h = startTime / HOUR;
 		startTime %= HOUR;
-		int m = startTime/MIN;
+		int m = startTime / MIN;
 		startTime %= MIN;
 		int s = startTime;
-		if(h <= 9) {
+		if (h <= 9) {
 			stb.append("0");
 		}
 		stb.append(h).append(":");
-		
-		if(m <= 9) {
+
+		if (m <= 9) {
 			stb.append("0");
 		}
 		stb.append(m).append(":");
-		
-		if(s <= 9) {
+
+		if (s <= 9) {
 			stb.append("0");
 		}
 		stb.append(s);
-		
+
 		return stb.toString();
 	}
-	
+
 	public static void main(String[] args) {
 		Solution_5 s = new Solution_5();
-		s.solution("02:03:55", "00:14:15", new String[] { "01:20:15-01:45:14", "00:40:31-01:00:00", "00:25:50-00:48:29", "01:30:59-01:53:29", "01:37:44-02:02:30"});
+		s.solution("02:03:55", "00:14:15", new String[] { "01:20:15-01:45:14", "00:40:31-01:00:00", "00:25:50-00:48:29",
+				"01:30:59-01:53:29", "01:37:44-02:02:30" });
 	}
 }

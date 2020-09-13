@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Solution_동굴탐험_실패 {
+public class Solution_동굴탐험 {
 
 	final int START = 0;
 
