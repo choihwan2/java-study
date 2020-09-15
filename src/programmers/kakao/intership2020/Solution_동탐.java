@@ -7,8 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Solution_동굴탐험_환 {
-
+public class Solution_동탐 {
 	final int START = 0;
 
 	public boolean solution(int n, int[][] path, int[][] order) {
@@ -78,9 +77,9 @@ public class Solution_동굴탐험_환 {
 					deque.offerLast(now);
 				}
 			}
-			
+
 			// 한사이클을 돌았는데 방문할 곳이 늘어나지는 않았고 큐가 비지않았다
-			if(isBlock) {
+			if (isBlock) {
 				return false;
 			}
 
