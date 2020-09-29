@@ -12,10 +12,11 @@ public class Solution_5607_조합 {
 		for (int i = 1; i <= iT; i++) {
 			int N = sc.nextInt();
 			int R = sc.nextInt();
-			long first = fact[N];
+			long front = fact[N];
 			
+			// 거듭제곱 구하는 방법
+			// https://onsil-thegreenhouse.github.io/programming/problem/2018/03/29/problem_math_power/
 			long denominator = (fact[R] * fact[N-R])%DIV;
-			
 			long index = DIV-2;
 			long fermatNum = 1;
 			while(index> 0) {
@@ -28,7 +29,7 @@ public class Solution_5607_조합 {
 			}
 			
 			
-			long answer = (first * fermatNum) % DIV;
+			long answer = (front * fermatNum) % DIV;
 			System.out.println("#" + i + " " + answer);
 			
 		}
