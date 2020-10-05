@@ -27,15 +27,18 @@ public class BOJ_17220_마약수사대 {
 			map[f][t] = 1;
 			connect[t]++;
 		}
+//		System.out.println(Arrays.toString(connect));
 
 		stk = new StringTokenizer(br.readLine());
 		int n = Integer.parseInt(stk.nextToken());
 		for (int i = 0; i < n; i++) {
 			int arrest = stk.nextToken().charAt(0) - 'A';
 			boolean[] isVisited = new boolean[N];
-			connect[arrest] = -1;
+			connect[arrest] = 0;
 			dfs(arrest, isVisited);
 		}
+		
+//		System.out.println(Arrays.toString(connect));
 
 		for (int i = 0; i < N; i++) {
 			if (connect[i] > 0) {
@@ -49,8 +52,10 @@ public class BOJ_17220_마약수사대 {
 		isVisited[vertex] = true;
 		for (int i = 0; i < N; i++) {
 			if (map[vertex][i] == 1 && isVisited[i] == false) {
-				dfs(i, isVisited);
 				connect[i]--;
+				if(connect[i] == 0) {
+					dfs(i, isVisited);
+				}
 			}
 		}
 
