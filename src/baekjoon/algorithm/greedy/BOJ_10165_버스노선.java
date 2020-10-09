@@ -41,8 +41,9 @@ public class BOJ_10165_버스노선 {
 		int N = Integer.parseInt(br.readLine());
 		int M = Integer.parseInt(br.readLine());
 		StringTokenizer stk = null;
-		LinkedList<Line> normalList = new LinkedList<>();
-		LinkedList<Line> reverseList = new LinkedList<>();
+		LinkedList<Line> normalList = new LinkedList<>(); // 0을 포함하지 않는 리스트 처음점(정렬된상태) 끝점(max). 그 다음에 나오는점이 최대끝점보다 작으면 포함관계
+		LinkedList<Line> reverseList = new LinkedList<>(); // a,b  a > b == 0 을 포함하는 리스트
+		// 2번째 리스트안에 normal
 		for (int i = 1; i <= M; i++) {
 			stk = new StringTokenizer(br.readLine());
 			int start = Integer.parseInt(stk.nextToken());
